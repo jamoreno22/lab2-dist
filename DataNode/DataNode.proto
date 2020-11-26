@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option go_package= "/grpc";
+
+package DataNode_grpc;
+
+service DataNode {
+
+    rpc DistributeChunks(Book) returns (Message) {}
+    rpc UploadBook(Book) returns (Message) {}
+    rpc DownloadBook(Message) returns (Book) {}
+    //Distribuido
+    rpc SendProposal(Proposal) returns (Message) {}
+
+}
+
+message Book{
+    string name = 1;
+    repeated bytes chunks = 2;
+}
+
+message Message {
+    string text = 1; 
+}
+
+message Proposal {
+    repeated int32 ids = 1;
+}

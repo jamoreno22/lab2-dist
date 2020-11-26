@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option go_package= "/grpc";
+
+package NameNode_grpc;
+
+service NameNode {
+
+    rpc WriteLog(Proposal) returns (Message) {}
+    //Centralizado
+    rpc SendProposal(Proposal) returns (Proposal) {}
+    rpc GenerateProposal(Proposal) returns (Proposal) {}
+
+}
+
+message Message {
+    string text = 1; 
+}
+
+message Proposal {
+    repeated int32 ids = 1;
+}
