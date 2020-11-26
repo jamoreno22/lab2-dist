@@ -6,11 +6,16 @@ package lab2;
 
 service NameNode {
 
-    rpc WriteLog(Proposal) returns (Message) {}
+    rpc WriteLog(stream Proposal) returns (Message) {}
     //Centralizado
-    rpc SendProposal(Proposal) returns (Proposal) {}
-    rpc GenerateProposal(Proposal) returns (Proposal) {}
+    rpc SendProposal(stream Proposal) returns (stream Proposal) {}
+    rpc GenerateProposal(stream Proposal) returns (stream Proposal) {}
 
+}
+
+message Chunk{
+    string name = 1;
+    bytes data = 2;
 }
 
 message Message {
@@ -18,5 +23,6 @@ message Message {
 }
 
 message Proposal {
-    repeated int32 ids = 1;
+    string ip = 1;
+    Chunk chunk = 2;
 }

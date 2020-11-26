@@ -24,6 +24,53 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
+type Chunk struct {
+	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Data                 []byte   `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Chunk) Reset()         { *m = Chunk{} }
+func (m *Chunk) String() string { return proto.CompactTextString(m) }
+func (*Chunk) ProtoMessage()    {}
+func (*Chunk) Descriptor() ([]byte, []int) {
+	return fileDescriptor_e56228e413a39553, []int{0}
+}
+
+func (m *Chunk) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Chunk.Unmarshal(m, b)
+}
+func (m *Chunk) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Chunk.Marshal(b, m, deterministic)
+}
+func (m *Chunk) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Chunk.Merge(m, src)
+}
+func (m *Chunk) XXX_Size() int {
+	return xxx_messageInfo_Chunk.Size(m)
+}
+func (m *Chunk) XXX_DiscardUnknown() {
+	xxx_messageInfo_Chunk.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Chunk proto.InternalMessageInfo
+
+func (m *Chunk) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *Chunk) GetData() []byte {
+	if m != nil {
+		return m.Data
+	}
+	return nil
+}
+
 type Message struct {
 	Text                 string   `protobuf:"bytes,1,opt,name=text,proto3" json:"text,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -35,7 +82,7 @@ func (m *Message) Reset()         { *m = Message{} }
 func (m *Message) String() string { return proto.CompactTextString(m) }
 func (*Message) ProtoMessage()    {}
 func (*Message) Descriptor() ([]byte, []int) {
-	return fileDescriptor_e56228e413a39553, []int{0}
+	return fileDescriptor_e56228e413a39553, []int{1}
 }
 
 func (m *Message) XXX_Unmarshal(b []byte) error {
@@ -64,7 +111,8 @@ func (m *Message) GetText() string {
 }
 
 type Proposal struct {
-	Ids                  []int32  `protobuf:"varint,1,rep,packed,name=ids,proto3" json:"ids,omitempty"`
+	Ip                   string   `protobuf:"bytes,1,opt,name=ip,proto3" json:"ip,omitempty"`
+	Chunk                *Chunk   `protobuf:"bytes,2,opt,name=chunk,proto3" json:"chunk,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -74,7 +122,7 @@ func (m *Proposal) Reset()         { *m = Proposal{} }
 func (m *Proposal) String() string { return proto.CompactTextString(m) }
 func (*Proposal) ProtoMessage()    {}
 func (*Proposal) Descriptor() ([]byte, []int) {
-	return fileDescriptor_e56228e413a39553, []int{1}
+	return fileDescriptor_e56228e413a39553, []int{2}
 }
 
 func (m *Proposal) XXX_Unmarshal(b []byte) error {
@@ -95,14 +143,22 @@ func (m *Proposal) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Proposal proto.InternalMessageInfo
 
-func (m *Proposal) GetIds() []int32 {
+func (m *Proposal) GetIp() string {
 	if m != nil {
-		return m.Ids
+		return m.Ip
+	}
+	return ""
+}
+
+func (m *Proposal) GetChunk() *Chunk {
+	if m != nil {
+		return m.Chunk
 	}
 	return nil
 }
 
 func init() {
+	proto.RegisterType((*Chunk)(nil), "lab2.Chunk")
 	proto.RegisterType((*Message)(nil), "lab2.Message")
 	proto.RegisterType((*Proposal)(nil), "lab2.Proposal")
 }
@@ -112,18 +168,21 @@ func init() {
 }
 
 var fileDescriptor_e56228e413a39553 = []byte{
-	// 170 bytes of a gzipped FileDescriptorProto
+	// 220 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0xe2, 0xf3, 0x4b, 0xcc, 0x4d,
 	0xf5, 0xcb, 0x4f, 0x49, 0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0xc9, 0x49, 0x4c, 0x32,
-	0x52, 0x92, 0xe5, 0x62, 0xf7, 0x4d, 0x2d, 0x2e, 0x4e, 0x4c, 0x4f, 0x15, 0x12, 0xe2, 0x62, 0x29,
-	0x49, 0xad, 0x28, 0x91, 0x60, 0x54, 0x60, 0xd4, 0xe0, 0x0c, 0x02, 0xb3, 0x95, 0x64, 0xb8, 0x38,
-	0x02, 0x8a, 0xf2, 0x0b, 0xf2, 0x8b, 0x13, 0x73, 0x84, 0x04, 0xb8, 0x98, 0x33, 0x53, 0x8a, 0x81,
-	0xd2, 0xcc, 0x1a, 0xac, 0x41, 0x20, 0xa6, 0xd1, 0x7c, 0x46, 0x2e, 0x0e, 0x98, 0xa9, 0x42, 0xda,
-	0x5c, 0x1c, 0xe1, 0x45, 0x99, 0x25, 0xa9, 0x3e, 0xf9, 0xe9, 0x42, 0x7c, 0x7a, 0x20, 0xc3, 0xf5,
-	0x60, 0x5a, 0xa5, 0x78, 0x21, 0x7c, 0xa8, 0x4d, 0x4a, 0x0c, 0x42, 0x06, 0x5c, 0x3c, 0xc1, 0xa9,
-	0x79, 0x29, 0x70, 0xb3, 0xd1, 0x35, 0xa0, 0xf1, 0x81, 0x3a, 0x4c, 0xb8, 0x04, 0xdc, 0x53, 0xf3,
-	0x52, 0x8b, 0x12, 0x4b, 0x52, 0x89, 0xd7, 0x95, 0xc4, 0x06, 0xf6, 0xab, 0x31, 0x20, 0x00, 0x00,
-	0xff, 0xff, 0x9d, 0x3d, 0x2b, 0xbe, 0xfd, 0x00, 0x00, 0x00,
+	0x52, 0xd2, 0xe7, 0x62, 0x75, 0xce, 0x28, 0xcd, 0xcb, 0x16, 0x12, 0xe2, 0x62, 0xc9, 0x03, 0x2a,
+	0x90, 0x60, 0x54, 0x60, 0xd4, 0xe0, 0x0c, 0x02, 0xb3, 0x41, 0x62, 0x29, 0x89, 0x25, 0x89, 0x12,
+	0x4c, 0x40, 0x31, 0x9e, 0x20, 0x30, 0x5b, 0x49, 0x96, 0x8b, 0xdd, 0x37, 0xb5, 0xb8, 0x38, 0x31,
+	0x1d, 0x2c, 0x5d, 0x92, 0x5a, 0x51, 0x02, 0xd3, 0x02, 0x62, 0x2b, 0xd9, 0x72, 0x71, 0x04, 0x14,
+	0xe5, 0x17, 0xe4, 0x17, 0x27, 0xe6, 0x08, 0xf1, 0x71, 0x31, 0x65, 0x16, 0x40, 0x65, 0x81, 0x2c,
+	0x21, 0x45, 0x2e, 0xd6, 0x64, 0x90, 0x5d, 0x60, 0xf3, 0xb8, 0x8d, 0xb8, 0xf5, 0x40, 0x2e, 0xd0,
+	0x03, 0x5b, 0x1f, 0x04, 0x91, 0x31, 0x5a, 0xc9, 0xc8, 0xc5, 0x01, 0x73, 0xa7, 0x90, 0x2e, 0x17,
+	0x47, 0x78, 0x51, 0x66, 0x49, 0xaa, 0x4f, 0x7e, 0xba, 0x10, 0x1f, 0x44, 0x31, 0xcc, 0x6c, 0x29,
+	0x5e, 0x08, 0x1f, 0xea, 0x14, 0x25, 0x06, 0x0d, 0x46, 0x21, 0x13, 0x2e, 0x9e, 0xe0, 0xd4, 0xbc,
+	0x14, 0x84, 0xf5, 0x68, 0x5a, 0xd0, 0xf8, 0x20, 0x3d, 0x06, 0x8c, 0x42, 0x16, 0x5c, 0x02, 0xee,
+	0xa9, 0x79, 0xa9, 0x45, 0x89, 0x25, 0xa9, 0xa4, 0xe9, 0x4c, 0x62, 0x03, 0x87, 0xa3, 0x31, 0x20,
+	0x00, 0x00, 0xff, 0xff, 0xa7, 0xb8, 0xc1, 0x42, 0x59, 0x01, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -138,10 +197,10 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type NameNodeClient interface {
-	WriteLog(ctx context.Context, in *Proposal, opts ...grpc.CallOption) (*Message, error)
+	WriteLog(ctx context.Context, opts ...grpc.CallOption) (NameNode_WriteLogClient, error)
 	//Centralizado
-	SendProposal(ctx context.Context, in *Proposal, opts ...grpc.CallOption) (*Proposal, error)
-	GenerateProposal(ctx context.Context, in *Proposal, opts ...grpc.CallOption) (*Proposal, error)
+	SendProposal(ctx context.Context, opts ...grpc.CallOption) (NameNode_SendProposalClient, error)
+	GenerateProposal(ctx context.Context, opts ...grpc.CallOption) (NameNode_GenerateProposalClient, error)
 }
 
 type nameNodeClient struct {
@@ -152,130 +211,228 @@ func NewNameNodeClient(cc grpc.ClientConnInterface) NameNodeClient {
 	return &nameNodeClient{cc}
 }
 
-func (c *nameNodeClient) WriteLog(ctx context.Context, in *Proposal, opts ...grpc.CallOption) (*Message, error) {
-	out := new(Message)
-	err := c.cc.Invoke(ctx, "/lab2.NameNode/WriteLog", in, out, opts...)
+func (c *nameNodeClient) WriteLog(ctx context.Context, opts ...grpc.CallOption) (NameNode_WriteLogClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_NameNode_serviceDesc.Streams[0], "/lab2.NameNode/WriteLog", opts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
+	x := &nameNodeWriteLogClient{stream}
+	return x, nil
 }
 
-func (c *nameNodeClient) SendProposal(ctx context.Context, in *Proposal, opts ...grpc.CallOption) (*Proposal, error) {
-	out := new(Proposal)
-	err := c.cc.Invoke(ctx, "/lab2.NameNode/SendProposal", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
+type NameNode_WriteLogClient interface {
+	Send(*Proposal) error
+	CloseAndRecv() (*Message, error)
+	grpc.ClientStream
 }
 
-func (c *nameNodeClient) GenerateProposal(ctx context.Context, in *Proposal, opts ...grpc.CallOption) (*Proposal, error) {
-	out := new(Proposal)
-	err := c.cc.Invoke(ctx, "/lab2.NameNode/GenerateProposal", in, out, opts...)
+type nameNodeWriteLogClient struct {
+	grpc.ClientStream
+}
+
+func (x *nameNodeWriteLogClient) Send(m *Proposal) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *nameNodeWriteLogClient) CloseAndRecv() (*Message, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(Message)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *nameNodeClient) SendProposal(ctx context.Context, opts ...grpc.CallOption) (NameNode_SendProposalClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_NameNode_serviceDesc.Streams[1], "/lab2.NameNode/SendProposal", opts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
+	x := &nameNodeSendProposalClient{stream}
+	return x, nil
+}
+
+type NameNode_SendProposalClient interface {
+	Send(*Proposal) error
+	Recv() (*Proposal, error)
+	grpc.ClientStream
+}
+
+type nameNodeSendProposalClient struct {
+	grpc.ClientStream
+}
+
+func (x *nameNodeSendProposalClient) Send(m *Proposal) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *nameNodeSendProposalClient) Recv() (*Proposal, error) {
+	m := new(Proposal)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *nameNodeClient) GenerateProposal(ctx context.Context, opts ...grpc.CallOption) (NameNode_GenerateProposalClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_NameNode_serviceDesc.Streams[2], "/lab2.NameNode/GenerateProposal", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &nameNodeGenerateProposalClient{stream}
+	return x, nil
+}
+
+type NameNode_GenerateProposalClient interface {
+	Send(*Proposal) error
+	Recv() (*Proposal, error)
+	grpc.ClientStream
+}
+
+type nameNodeGenerateProposalClient struct {
+	grpc.ClientStream
+}
+
+func (x *nameNodeGenerateProposalClient) Send(m *Proposal) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *nameNodeGenerateProposalClient) Recv() (*Proposal, error) {
+	m := new(Proposal)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 // NameNodeServer is the server API for NameNode service.
 type NameNodeServer interface {
-	WriteLog(context.Context, *Proposal) (*Message, error)
+	WriteLog(NameNode_WriteLogServer) error
 	//Centralizado
-	SendProposal(context.Context, *Proposal) (*Proposal, error)
-	GenerateProposal(context.Context, *Proposal) (*Proposal, error)
+	SendProposal(NameNode_SendProposalServer) error
+	GenerateProposal(NameNode_GenerateProposalServer) error
 }
 
 // UnimplementedNameNodeServer can be embedded to have forward compatible implementations.
 type UnimplementedNameNodeServer struct {
 }
 
-func (*UnimplementedNameNodeServer) WriteLog(ctx context.Context, req *Proposal) (*Message, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method WriteLog not implemented")
+func (*UnimplementedNameNodeServer) WriteLog(srv NameNode_WriteLogServer) error {
+	return status.Errorf(codes.Unimplemented, "method WriteLog not implemented")
 }
-func (*UnimplementedNameNodeServer) SendProposal(ctx context.Context, req *Proposal) (*Proposal, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendProposal not implemented")
+func (*UnimplementedNameNodeServer) SendProposal(srv NameNode_SendProposalServer) error {
+	return status.Errorf(codes.Unimplemented, "method SendProposal not implemented")
 }
-func (*UnimplementedNameNodeServer) GenerateProposal(ctx context.Context, req *Proposal) (*Proposal, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GenerateProposal not implemented")
+func (*UnimplementedNameNodeServer) GenerateProposal(srv NameNode_GenerateProposalServer) error {
+	return status.Errorf(codes.Unimplemented, "method GenerateProposal not implemented")
 }
 
 func RegisterNameNodeServer(s *grpc.Server, srv NameNodeServer) {
 	s.RegisterService(&_NameNode_serviceDesc, srv)
 }
 
-func _NameNode_WriteLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Proposal)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(NameNodeServer).WriteLog(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/lab2.NameNode/WriteLog",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NameNodeServer).WriteLog(ctx, req.(*Proposal))
-	}
-	return interceptor(ctx, in, info, handler)
+func _NameNode_WriteLog_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(NameNodeServer).WriteLog(&nameNodeWriteLogServer{stream})
 }
 
-func _NameNode_SendProposal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Proposal)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(NameNodeServer).SendProposal(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/lab2.NameNode/SendProposal",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NameNodeServer).SendProposal(ctx, req.(*Proposal))
-	}
-	return interceptor(ctx, in, info, handler)
+type NameNode_WriteLogServer interface {
+	SendAndClose(*Message) error
+	Recv() (*Proposal, error)
+	grpc.ServerStream
 }
 
-func _NameNode_GenerateProposal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Proposal)
-	if err := dec(in); err != nil {
+type nameNodeWriteLogServer struct {
+	grpc.ServerStream
+}
+
+func (x *nameNodeWriteLogServer) SendAndClose(m *Message) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *nameNodeWriteLogServer) Recv() (*Proposal, error) {
+	m := new(Proposal)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
-	if interceptor == nil {
-		return srv.(NameNodeServer).GenerateProposal(ctx, in)
+	return m, nil
+}
+
+func _NameNode_SendProposal_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(NameNodeServer).SendProposal(&nameNodeSendProposalServer{stream})
+}
+
+type NameNode_SendProposalServer interface {
+	Send(*Proposal) error
+	Recv() (*Proposal, error)
+	grpc.ServerStream
+}
+
+type nameNodeSendProposalServer struct {
+	grpc.ServerStream
+}
+
+func (x *nameNodeSendProposalServer) Send(m *Proposal) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *nameNodeSendProposalServer) Recv() (*Proposal, error) {
+	m := new(Proposal)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
 	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/lab2.NameNode/GenerateProposal",
+	return m, nil
+}
+
+func _NameNode_GenerateProposal_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(NameNodeServer).GenerateProposal(&nameNodeGenerateProposalServer{stream})
+}
+
+type NameNode_GenerateProposalServer interface {
+	Send(*Proposal) error
+	Recv() (*Proposal, error)
+	grpc.ServerStream
+}
+
+type nameNodeGenerateProposalServer struct {
+	grpc.ServerStream
+}
+
+func (x *nameNodeGenerateProposalServer) Send(m *Proposal) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *nameNodeGenerateProposalServer) Recv() (*Proposal, error) {
+	m := new(Proposal)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
 	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NameNodeServer).GenerateProposal(ctx, req.(*Proposal))
-	}
-	return interceptor(ctx, in, info, handler)
+	return m, nil
 }
 
 var _NameNode_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "lab2.NameNode",
 	HandlerType: (*NameNodeServer)(nil),
-	Methods: []grpc.MethodDesc{
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
 		{
-			MethodName: "WriteLog",
-			Handler:    _NameNode_WriteLog_Handler,
+			StreamName:    "WriteLog",
+			Handler:       _NameNode_WriteLog_Handler,
+			ClientStreams: true,
 		},
 		{
-			MethodName: "SendProposal",
-			Handler:    _NameNode_SendProposal_Handler,
+			StreamName:    "SendProposal",
+			Handler:       _NameNode_SendProposal_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
 		},
 		{
-			MethodName: "GenerateProposal",
-			Handler:    _NameNode_GenerateProposal_Handler,
+			StreamName:    "GenerateProposal",
+			Handler:       _NameNode_GenerateProposal_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
 	Metadata: "NameNode.proto",
 }

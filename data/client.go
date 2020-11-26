@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -23,11 +22,11 @@ func main() {
 
 	defer conn.Close()
 
-	dc := data.NewDataNodeClient(conn)
+	//dc := data.NewDataNodeClient(conn)
 
 	//particionar pdf en chunks
 
-	fileToBeChunked := "../books/Mujercitas-Alcott_Louisa_May.pdf"
+	fileToBeChunked := "books/Mujercitas-Alcott_Louisa_May.pdf"
 
 	file, err := os.Open(fileToBeChunked)
 
@@ -42,7 +41,7 @@ func main() {
 
 	var fileSize int64 = fileInfo.Size()
 
-	const fileChunk = 0.25 * (1 << 20) // 1 MB, change this to your requirement
+	const fileChunk = 256000 // 1 MB, change this to your requirement
 
 	// calculate total number of parts the file will be chunked into
 
@@ -75,9 +74,11 @@ func main() {
 		book[i] = data.Chunk{Name: fileName, Data: partBuffer}
 
 		fmt.Println("Split to : ", fileName)
+		log.Println("tamaño: ", partSize)
 	}
 
-	dc.UploadBook(context.Background(), &book)
+	//dc.UploadBook(context.Background(), &book)
+
 	log.Println("Client connected...")
 
 }
