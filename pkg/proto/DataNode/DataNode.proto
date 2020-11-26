@@ -16,7 +16,7 @@ service DataNode {
 
 message Chunk{
     string name = 1;
-    repeated bytes data = 2;
+    bytes data = 2;
 }
 
 message Message {

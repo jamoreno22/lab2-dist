@@ -49,7 +49,9 @@ func main() {
 	totalPartsNum := uint64(math.Ceil(float64(fileSize) / float64(fileChunk)))
 
 	fmt.Printf("Splitting to %d pieces.\n", totalPartsNum)
-	book := []data.Chunk
+
+	book := make([]data.Chunk, totalPartsNum)
+
 	for i := uint64(0); i < totalPartsNum; i++ {
 
 		partSize := int(math.Min(fileChunk, float64(fileSize-int64(i*fileChunk))))
@@ -70,7 +72,7 @@ func main() {
 		ioutil.WriteFile(fileName, partBuffer, os.ModeAppend)
 
 		// books instantiation
-		book := data.Chunk{Name: fileName, Chunks: partBuffer}
+		book[i] = data.Chunk{Name: fileName, Data: partBuffer}
 
 		fmt.Println("Split to : ", fileName)
 	}
