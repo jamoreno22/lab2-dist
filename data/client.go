@@ -15,6 +15,7 @@ import (
 
 func main() {
 	var conn *grpc.ClientConn
+
 	conn, err := grpc.Dial(":7777", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %s", err)
@@ -24,7 +25,9 @@ func main() {
 
 	dc := data.NewDataNodeClient(conn)
 
-	fileToBeChunked := "../books/Moby_Dick-Herman_Melville.pdf"
+	//particionar pdf en chunks
+
+	fileToBeChunked := "../books/Mujercitas-Alcott_Louisa_May.pdf"
 
 	file, err := os.Open(fileToBeChunked)
 
@@ -46,7 +49,7 @@ func main() {
 	totalPartsNum := uint64(math.Ceil(float64(fileSize) / float64(fileChunk)))
 
 	fmt.Printf("Splitting to %d pieces.\n", totalPartsNum)
-
+	book := []data.Chunk
 	for i := uint64(0); i < totalPartsNum; i++ {
 
 		partSize := int(math.Min(fileChunk, float64(fileSize-int64(i*fileChunk))))
@@ -66,10 +69,13 @@ func main() {
 		// write/save buffer to disk
 		ioutil.WriteFile(fileName, partBuffer, os.ModeAppend)
 
+		// books instantiation
+		book := data.Chunk{Name: fileName, Chunks: partBuffer}
+
 		fmt.Println("Split to : ", fileName)
 	}
 
-	c.UploadBook(context.Background(), &)
+	dc.UploadBook(context.Background(), &book)
 	log.Println("Client connected...")
 
 }

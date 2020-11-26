@@ -33,7 +33,7 @@ func main() {
 		log.Fatalf("failed to serve: %s", err)
 	}
 
-	// create a listener on TCP port 7777
+	// create a listener on TCP port 8000
 	namelis, err := net.Listen("tcp", fmt.Sprintf(":%d", 8000))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
