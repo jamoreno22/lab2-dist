@@ -1,10 +1,10 @@
-package main
+package DataNode
 
 import (
 	"log"
 	"net"
 
-	"DataNode_grpc"
+	"github.com/jamoreno22/lab2_dist/blob/main/DataNode/DataNode_grpc"
 
 	"google.golang.org/grpc"
 )
