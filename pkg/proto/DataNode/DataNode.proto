@@ -6,15 +6,15 @@ package lab2;
 
 service DataNode {
 
-    rpc DistributeChunks(stream Chunks) returns (Message) {}
-    rpc UploadBook(stream Chunks) returns (Message) {}
-    rpc DownloadBook(Message) returns (stream Chunks) {}
+    rpc DistributeChunks(stream Chunk) returns (Message) {}
+    rpc UploadBook(stream Chunk) returns (Message) {}
+    rpc DownloadBook(Message) returns (stream Chunk) {}
     //Distribuido
     rpc SendProposal(stream Proposal) returns (Message) {}
 
 }
 
-message Chunks{
+message Chunk{
     string name = 1;
     repeated bytes data = 2;
 }
