@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -22,9 +23,9 @@ func main() {
 
 	defer conn.Close()
 
-	//dc := data.NewDataNodeClient(conn)
+	dc := data.NewDataNodeClient(conn)
 
-	//particionar pdf en chunks
+	// -    - - - - - - -  - -    particionar pdf en chunks - - - - -  - - - -
 
 	fileToBeChunked := "books/Mujercitas-Alcott_Louisa_May.pdf"
 
@@ -41,7 +42,7 @@ func main() {
 
 	var fileSize int64 = fileInfo.Size()
 
-	const fileChunk = 256000 // 1 MB, change this to your requirement
+	const fileChunk = 250000 // 1 MB, change this to your requirement
 
 	// calculate total number of parts the file will be chunked into
 
@@ -49,7 +50,7 @@ func main() {
 
 	fmt.Printf("Splitting to %d pieces.\n", totalPartsNum)
 
-	book := make([]data.Chunk, totalPartsNum)
+	book := make([]*data.Chunk, totalPartsNum)
 
 	for i := uint64(0); i < totalPartsNum; i++ {
 
@@ -71,11 +72,32 @@ func main() {
 		ioutil.WriteFile(fileName, partBuffer, os.ModeAppend)
 
 		// books instantiation
-		book[i] = data.Chunk{Name: fileName, Data: partBuffer}
+		book[i] = &data.Chunk{Name: fileName, Data: partBuffer}
 
 		fmt.Println("Split to : ", fileName)
 		log.Println("tamaño: ", partSize)
 	}
+	// - - - - - --- -- - -  stream chunks - - - - - - - - - - - -
+
+	// Create a random number of random points
+
+	stream, err := dc.UploadBook(context.Background())
+	if err != nil {
+		log.Println("Error de stream uploadBook")
+	}
+	a := 1
+	for _, chunk := range book {
+		if err := stream.Send(chunk); err != nil {
+			log.Println("error al enviar chunk")
+			log.Fatalf("%v.Send(%d) = %v", stream, a, err)
+		}
+		a = a + 1
+	}
+	reply, err := stream.CloseAndRecv()
+	if err != nil {
+		log.Println("Error recepcion response")
+	}
+	log.Printf("Route summary: %v", reply)
 
 	//dc.UploadBook(context.Background(), &book)
 
