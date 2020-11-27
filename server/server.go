@@ -1,7 +1,7 @@
 package main
 
 import (
-	"context"
+
 	"fmt"
 	"io"
 	"log"
@@ -22,10 +22,14 @@ type nameServer struct {
 	Proposals map[string][]*name.Proposal
 }
 
+type nameServer2 struct {
+	name.UnimplementedNameNodeServer
+}
+
 var path = "Log"
 
 func main() {
-	createFile()
+	//createFile()
 	// create a listener on TCP port 7777
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", 7777))
 	if err != nil {
@@ -40,12 +44,12 @@ func main() {
 		log.Fatalf("failed to serve: %s", err)
 	}
 
-	// create a listener on TCP port 7777
+	// create a listener on TCP port 8000
 	namelis, err := net.Listen("tcp", fmt.Sprintf(":%d", 8000))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	} // create a server instance
-	ns := nameServer{}                               // create a gRPC server object
+	ns := nameServer2{}                               // create a gRPC server object
 	grpcNameServer := grpc.NewServer()               // attach the Ping service to the server
 	name.RegisterNameNodeServer(grpcNameServer, &ns) // start the server
 
@@ -55,6 +59,7 @@ func main() {
 	}
 }
 
+/*
 func createFile() {
 	var _, err = os.Stat(path)
 	if os.IsNotExist(err) {
@@ -66,7 +71,8 @@ func createFile() {
 	}
 }
 
-func writeFile() {
+
+func writeFile(name.Proposal) {
 	var file, err = os.OpenFile(path, os.O_RDWR, 0644)
 	if err != nil {
 		return
@@ -79,26 +85,41 @@ func writeFile() {
 	//}
 	_, err = file.WriteString(fmt.Sprint(sum))
 }
-
-func (s *nameServer) WriteLog(ctx context.Context, stream name.NameNode_WriteLogServer) (name.Message, error) {
+*/
+func (s *nameServer) WriteLog(wls name.NameNode_WriteLogServer) error {
 	log.Printf("Stream WriteLogServer")
-	for {
-		prop, err := stream.Recv()
-		if err == io.EOF {
-			return name.Message{Text: "Oh no"}, err
-		}
-		if err != nil {
-			return name.Message{Text: "Oh no 2"}, err
-		}
-		key := prop.Ip
-		for _, n := range s.Proposals[key] {
-			if err := stream.Send(*n); err != nil {
-				return name.Message{Text: "Oh no 3"}, err
-			}
-		}
+	// create log
+	f, err := os.Create("data.txt")
 
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	return name.Message{Text: "holi"}, nil
+	defer f.Close()
+
+	// saved Proposals array
+	sP := []name.Proposal{}
+	for {
+		prop, err := wls.Recv()
+		if err == io.EOF {
+			log.Printf("EOF ------------")
+			return (wls.SendAndClose(&name.Message{Text:"Oh no... EOF",}))
+		}
+		if err != nil {
+			return err
+		}
+
+		sP = append(sP, *prop)
+		
+		// Aquí va el código para guardar el log		
+		
+		_, err2 := f.WriteString("ip " + prop.Ip)
+		
+		if err2 != nil {
+			log.Fatal(err2)
+		}
+
+		// ------------------------------------
+	}
 
 }
