@@ -26,7 +26,7 @@ func main() {
 	proposals = append(proposals, gral.Proposal{Ip: "8000", Chunk: &gral.Chunk{Name: "Chunk1", Data: []byte("ABC€")}})
 	proposals = append(proposals, gral.Proposal{Ip: "8001", Chunk: &gral.Chunk{Name: "Chunk2", Data: []byte("ABC2")}})
 
-	writeLog2(client, proposals)
+	runWriteLog(client, proposals)
 	//aber, err := client.WriteLog(context.Background(), prop)
 
 	log.Println("fin")
@@ -34,7 +34,7 @@ func main() {
 }
 
 //enviar propuesta al servidor
-func writeLog2(nc gral.NameNodeClient, proposals []gral.Proposal) error {
+func runWriteLog(nc gral.NameNodeClient, proposals []gral.Proposal) error {
 	log.Println("Inicio de stream writeLog")
 	stream, err := nc.WriteLog(context.Background())
 	if err != nil {
