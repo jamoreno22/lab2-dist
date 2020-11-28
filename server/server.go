@@ -17,11 +17,6 @@ type dataServer struct {
 
 type nameServer struct {
 	gral.UnimplementedNameNodeServer
-	Proposals map[string][]*gral.Proposal
-}
-
-type nameServer2 struct {
-	gral.UnimplementedNameNodeServer
 }
 
 var path = "Log"
@@ -53,7 +48,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	// create a server instance
-	ns := nameServer2{}                              // create a gRPC server object
+	ns := nameServer{}                               // create a gRPC server object
 	grpcNameServer := grpc.NewServer()               // attach the Ping service to the server
 	gral.RegisterNameNodeServer(grpcNameServer, &ns) // start the server
 
