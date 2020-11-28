@@ -1,121 +1,93 @@
 package main
 
 import (
-
 	"fmt"
 	"io"
 	"log"
 	"net"
 	"os"
 
-	data "github.com/jamoreno22/lab2_dist/pkg/proto/DataNode"
-	name "github.com/jamoreno22/lab2_dist/pkg/proto/NameNode"
+	gral "github.com/jamoreno22/lab2_dist/pkg/proto"
 	"google.golang.org/grpc"
 )
 
 type dataServer struct {
-	data.UnimplementedDataNodeServer
+	gral.UnimplementedDataNodeServer
 }
 
 type nameServer struct {
-	name.UnimplementedNameNodeServer
-	Proposals map[string][]*name.Proposal
+	gral.UnimplementedNameNodeServer
+	Proposals map[string][]*gral.Proposal
 }
 
 type nameServer2 struct {
-	name.UnimplementedNameNodeServer
+	gral.UnimplementedNameNodeServer
 }
 
 var path = "Log"
 
-func main() {
-	//createFile()
-	// create a listener on TCP port 7777
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", 7777))
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	} // create a server instance
-	ds := dataServer{}                               // create a gRPC server object
-	grpcDataServer := grpc.NewServer()               // attach the Ping service to the server
-	data.RegisterDataNodeServer(grpcDataServer, &ds) // start the server
-	
-	//books variable when books are saved
-	books := []data.Book
-	
+// books variable when books are saved
+var books = []gral.Book{}
 
-	log.Println("Server running ...")
-	if err := grpcDataServer.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %s", err)
-	}
+func main() {
+	/*
+		// create a listener on TCP port 7777
+		lis, err := net.Listen("tcp", fmt.Sprintf(":%d", 7777))
+		if err != nil {
+			log.Fatalf("failed to listen: %v", err)
+		}
+		// create a server instance
+		ds := dataServer{}                               // create a gRPC server object
+		grpcDataServer := grpc.NewServer()               // attach the Ping service to the server
+		gral.RegisterDataNodeServer(grpcDataServer, &ds) // start the server
+
+		log.Println("Server running ...")
+		if err := grpcDataServer.Serve(lis); err != nil {
+			log.Fatalf("failed to serve: %s", err)
+		}
+	*/
 
 	// create a listener on TCP port 8000
 	namelis, err := net.Listen("tcp", fmt.Sprintf(":%d", 8000))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
-	} // create a server instance
-	ns := nameServer2{}                               // create a gRPC server object
+	}
+	// create a server instance
+	ns := nameServer2{}                              // create a gRPC server object
 	grpcNameServer := grpc.NewServer()               // attach the Ping service to the server
-	name.RegisterNameNodeServer(grpcNameServer, &ns) // start the server
+	gral.RegisterNameNodeServer(grpcNameServer, &ns) // start the server
 
-	log.Println("Server running ...")
+	log.Println("NameServer running ...")
 	if err := grpcNameServer.Serve(namelis); err != nil {
 		log.Fatalf("failed to serve: %s", err)
 	}
 }
 
-/*
-func createFile() {
-	var _, err = os.Stat(path)
-	if os.IsNotExist(err) {
-		var file, err = os.Create(path)
-		if err != nil {
-			return
-		}
-		defer file.Close()
-	}
-}
-
-
-func writeFile(name.Proposal) {
-	var file, err = os.OpenFile(path, os.O_RDWR, 0644)
-	if err != nil {
-		return
-	}
-	defer file.Close()
-	sum := 0
-	//for i , s:= range book.GetChunks(){
-	//	fmt.Println(i,s)
-	//	 sum = i
-	//}
-	_, err = file.WriteString(fmt.Sprint(sum))
-}
-*/
-
 // UploadBook server side
-func (d *dataServer) UploadBook(ubs data.DataNode_UploadBookServer) error {
+func (d *dataServer) UploadBook(ubs gral.DataNode_UploadBookServer) error {
 	log.Printf("Stream UploadBook")
 
 	// saved Proposals array
-	book := data.Book{}
+	book := gral.Book{}
+	indice := 0
 	for {
 		chunk, err := ubs.Recv()
 		if err == io.EOF {
-			log.Printf("EOF ------------")
-			return (ubs.SendAndClose(&data.Message{Text:"EOF",}))
+			books = append(books, book)
+			log.Printf("EOF... books lenght = %d", len(books))
+			return (ubs.SendAndClose(&gral.Message{Text: "EOF"}))
 		}
 		if err != nil {
 			return err
 		}
+		book.Chunks = append(book.Chunks, chunk)
+		indice = indice + 1
 
-		book.extend(chunk)
-		
 	}
-
-	books = append(books, book)
 }
 
 // Writelog server side
-func (s *nameServer) WriteLog(wls name.NameNode_WriteLogServer) error {
+func (s *nameServer) WriteLog(wls gral.NameNode_WriteLogServer) error {
 	log.Printf("Stream WriteLogServer")
 	// create log
 	f, err := os.Create("data.txt")
@@ -127,28 +99,28 @@ func (s *nameServer) WriteLog(wls name.NameNode_WriteLogServer) error {
 	defer f.Close()
 
 	// saved Proposals array
-	sP := []name.Proposal{}
+	sP := []gral.Proposal{}
+
 	for {
 		prop, err := wls.Recv()
 		if err == io.EOF {
 			log.Printf("EOF ------------")
-			return (wls.SendAndClose(&name.Message{Text:"Oh no... EOF",}))
+			return (wls.SendAndClose(&gral.Message{Text: "Oh no... EOF"}))
 		}
 		if err != nil {
 			return err
 		}
 
 		sP = append(sP, *prop)
-		
-		// Aquí va el código para guardar el log		
-		
+		log.Println("algo hace")
+		// Aquí va el código para guardar el log
+
 		_, err2 := f.WriteString("ip " + prop.Ip)
-		
+
 		if err2 != nil {
 			log.Fatal(err2)
 		}
 
 		// ------------------------------------
 	}
-
 }

@@ -9,7 +9,7 @@ import (
 	"os"
 	"strconv"
 
-	data "github.com/jamoreno22/lab2_dist/pkg/proto/DataNode"
+	gral "github.com/jamoreno22/lab2_dist/pkg/proto"
 	"google.golang.org/grpc"
 )
 
@@ -23,11 +23,17 @@ func main() {
 
 	defer conn.Close()
 
-	dc := data.NewDataNodeClient(conn)
-
-	// -    - - - - - - -  - -    particionar pdf en chunks - - - - -  - - - -
-
+	dc := gral.NewDataNodeClient(conn)
 	fileToBeChunked := "books/Mujercitas-Alcott_Louisa_May.pdf"
+
+	uploadBook2(dc, fileToBeChunked)
+
+	log.Println("Client connected...")
+
+}
+
+func uploadBook2(dc gral.DataNodeClient, fileToBeChunked string) error {
+	// -    - - - - - - -  - -    particionar pdf en chunks - - - - -  - - - -
 
 	file, err := os.Open(fileToBeChunked)
 
@@ -50,7 +56,7 @@ func main() {
 
 	fmt.Printf("Splitting to %d pieces.\n", totalPartsNum)
 
-	book := make([]*data.Chunk, totalPartsNum)
+	book := make([]*gral.Chunk, totalPartsNum)
 
 	for i := uint64(0); i < totalPartsNum; i++ {
 
@@ -72,15 +78,13 @@ func main() {
 		ioutil.WriteFile(fileName, partBuffer, os.ModeAppend)
 
 		// books instantiation
-		book[i] = &data.Chunk{Name: fileName, Data: partBuffer}
+		book[i] = &gral.Chunk{Name: fileName, Data: partBuffer}
 
 		fmt.Println("Split to : ", fileName)
 		log.Println("tamaño: ", partSize)
 	}
+
 	// - - - - - --- -- - -  stream chunks - - - - - - - - - - - -
-
-	// Create a random number of random points
-
 	stream, err := dc.UploadBook(context.Background())
 	if err != nil {
 		log.Println("Error de stream uploadBook")
@@ -98,9 +102,5 @@ func main() {
 		log.Println("Error recepcion response")
 	}
 	log.Printf("Route summary: %v", reply)
-
-	//dc.UploadBook(context.Background(), &book)
-
-	log.Println("Client connected...")
-
+	return nil
 }
