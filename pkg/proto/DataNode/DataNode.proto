@@ -14,6 +14,10 @@ service DataNode {
 
 }
 
+message Book {
+    repeated Chunk chunks =1;
+}
+
 message Chunk{
     string name = 1;
     bytes data = 2;

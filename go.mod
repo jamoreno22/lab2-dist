@@ -4,6 +4,10 @@ go 1.13
 
 require (
 	github.com/golang/protobuf v1.4.3
-	golang.org/x/net v0.0.0-20190311183353-d8887717615a
+	golang.org/x/net v0.0.0-20201110031124-69a78807bb2b
+	golang.org/x/sys v0.0.0-20201126233918-771906719818 // indirect
+	golang.org/x/text v0.3.4 // indirect
+	google.golang.org/genproto v0.0.0-20201119123407-9b1e624d6bc4 // indirect
 	google.golang.org/grpc v1.33.2
+	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.0.1 // indirect
 )

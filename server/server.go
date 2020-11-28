@@ -38,6 +38,10 @@ func main() {
 	ds := dataServer{}                               // create a gRPC server object
 	grpcDataServer := grpc.NewServer()               // attach the Ping service to the server
 	data.RegisterDataNodeServer(grpcDataServer, &ds) // start the server
+	
+	//books variable when books are saved
+	books := []data.Book
+	
 
 	log.Println("Server running ...")
 	if err := grpcDataServer.Serve(lis); err != nil {
@@ -86,6 +90,31 @@ func writeFile(name.Proposal) {
 	_, err = file.WriteString(fmt.Sprint(sum))
 }
 */
+
+// UploadBook server side
+func (d *dataServer) UploadBook(ubs data.DataNode_UploadBookServer) error {
+	log.Printf("Stream UploadBook")
+
+	// saved Proposals array
+	book := data.Book{}
+	for {
+		chunk, err := ubs.Recv()
+		if err == io.EOF {
+			log.Printf("EOF ------------")
+			return (ubs.SendAndClose(&data.Message{Text:"EOF",}))
+		}
+		if err != nil {
+			return err
+		}
+
+		book.extend(chunk)
+		
+	}
+
+	books = append(books, book)
+}
+
+// Writelog server side
 func (s *nameServer) WriteLog(wls name.NameNode_WriteLogServer) error {
 	log.Printf("Stream WriteLogServer")
 	// create log
